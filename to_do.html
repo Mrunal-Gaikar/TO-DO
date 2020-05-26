@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>To Do list</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment-with-locales.min.js"></script>
+<style>
+
+table, th, td { 
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+ 
+}
+#table1 {
+  border-collapse: separate;
+ /* border:1px solid #D3D3D3; */
+  margin-left:auto;
+  margin-right:auto;
+  padding:5px;
+  border-spacing:5px; 
+ border-radius: 4px;
+ background-color: #fafafa;
+ box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+#table1:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  cursor: pointer;
+}
+
+.tab1{
+border-style :inset;
+}
+
+.open-button {
+  
+  color: white;
+ 
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  padding: 10px 12px;
+  border-radius: 20%;
+   margin: 5px;
+  background-color: green;
+  
+ 
+}
+
+
+.button1 {border-radius: 50%; padding: 0px;}
+
+
+
+/* The popup form - hidden by default */
+.form-popup {
+  display: none;
+  
+  position:relative;
+  right: 50px;
+  left: 500px;
+  border: 1px solid #f1f1f1;
+}
+
+/* Add styles to the form container */
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=datetime] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=datetime]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 50%;
+  margin-bottom:10px;
+  margin-top:10px;
+  opacity: 0.8;
+  
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
+
+h2 {
+  color: black;
+  font-family: Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif;
+  text-align: center;
+  font-size: 150%;
+  padding-top:10px;
+}
+.body{
+ background-color:#eeeeee;
+ text-align: center;
+}
+.topBar{
+  width: 100%;
+  padding: 15px;
+  color: white;
+  font-size: 26px;
+  font-weight: 600;
+  background-color: #512DA8;
+}
+.table-footer{
+  display: table-footer-group;
+}
+.col1{
+padding-left:43px;
+}
+</style>
+</head>
+<body class="body">
+
+<div class="topBar">THINGS TO DO</div>
+<div>
+<table id="table1"  width="50%" border="0" class="tab1">
+<thead>
+<ul>
+  <tr>	
+    <th class="col1">Task</th>
+    <th>Deadline</th>
+	<th> </th>
+  </tr>
+</ul>
+</thead>
+
+<tbody>
+</tbody>
+
+<tfoot class="table-footer">
+  <tr>
+    <td></td>
+    <td>
+    <button type="button"   class="open-button" onclick="openForm()">Add</button>
+  </td>
+  </tr>
+</tfoot>
+ 
+</table>
+
+</div>
+
+<div class="form-popup" id="myForm">
+  <form class="form-container" method="POST">
+    <h2>Lets note it down!</h2>
+
+    <label for="task1"><b>Task</b></label>
+    <input type="text" placeholder="Enter Task" id="task1" required>
+
+    <label for="deadline"><b>Deadline</b></label>
+    <input type="datetime-local"  id="deadline" required> &#128197
+
+    <button type="submit" class="btn" onclick="sendData()">Add</button>
+	<button type="button" class="btn" onclick="reset()" onclick="reset()">Reset</button>
+    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+  </form>
+  
+</div>
+
+<script>
+
+function openForm() {
+ 
+  document.getElementById("myForm").style.display = "block";
+}
+function reset(){
+	document.getElementById('task1').value = '';
+	document.getElementById('deadline').value = '';
+}
+function closeForm() {
+	document.getElementById('task1').value = '';
+	document.getElementById('deadline').value = '';
+	document.getElementById("myForm").style.display = "none";
+}
+
+
+function remove(ct){
+
+document.getElementById(ct).style.display = "none";
+
+$.ajax({ 
+
+		type: "POST",
+		url:"del.php",
+		data: { id: ct},
+   
+		success: function(response){
+		console.log(response);
+		},
+		 
+		error: function(request, status, error) {
+		console.log(error);
+		console.log('error');}
+		
+});
+
+}
+
+$( document ).ready(function() { getData();	});
+
+function getData(){
+ $.ajax({ type: "GET",
+		url:"get.php",
+		dataType:"text",
+		success: function(response){
+		//console.log(response);
+		var obj = JSON.parse(response);
+		//console.log(obj);
+
+	for (var i = 0; i < obj.length; i++) {
+	$("#table1 tbody").append(
+      "<tr id="+obj[i].id+">" +	  
+         "<td><ul><li>"+obj[i].tname+"</li></ul></td>" +
+        "<td> "+moment(moment(obj[i].Deadline, moment.defaultFormat).toDate()).format('llll')+"</td>" +
+		"<td> <button class= button1 onclick=remove("+obj[i].id+")> &#9940</button></td>" +
+		"</tr>"
+      );
+	  
+   }
+
+		},  
+		error: function(request, status, error) {
+		console.log(error);
+		console.log('error');
+}
+		
+});
+
+}
+
+
+function sendData(){
+
+ var val1 = $('#task1').val();
+    var val2 = $('#deadline').val();
+	console.log(val1);
+$.ajax({ 
+
+		type: "POST",
+		url:"action_page.php",
+		//dataType:"json",
+		data: {task1: val1, deadline: val2 },
+   
+		success: function(response){
+		console.log(response);
+		},
+		 
+		error: function(request, status, error) {
+		console.log(error);
+		console.log('error');}
+		
+		
+}); 
+}
+
+</script>
+
+</body>
+</html>
